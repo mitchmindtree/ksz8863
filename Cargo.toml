@@ -1,6 +1,6 @@
 [package]
 name = "ksz8863"
-version = "0.1.0"
+version = "0.1.1"
 authors = ["mitchmindtree <mail@mitchellnordine.com>"]
 description = "A driver for the KSZ8863 Ethernet Switch."
 keywords = ["ethernet", "switch", "phy", "smi", "miim"]
@@ -11,7 +11,7 @@ homepage = "https://github.com/mitchmindtree/ksz8863"
 edition = "2018"
 
 [dependencies]
-bitvec = "0.19.4"
+bitvec = { version = "0.20.0", default-features = false }
 hash32 = { version = "0.1.1", optional = true }
 hash32-derive = { version = "0.1", optional = true }
 serde = { version = "1", default-features = false, features = ["derive"], optional = true }

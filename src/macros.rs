@@ -377,7 +377,7 @@ macro_rules! impl_registers {
 
             impl Into<$RegTy> for $Reg {
                 fn into(self) -> $RegTy {
-                    let [bits] = self.fields.unwrap();
+                    let [bits] = self.fields.value();
                     bits
                 }
             }
@@ -424,7 +424,7 @@ macro_rules! impl_registers {
                 where
                     S: Serializer,
                 {
-                    let [val]: [$RegTy; 1] = arr.unwrap();
+                    let [val]: [$RegTy; 1] = arr.value();
                     val.serialize(s)
                 }
 
