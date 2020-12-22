@@ -4,30 +4,32 @@ A driver for the KSZ8863 (MLL/FLL/RLL) Ethernet Switch.
 
 This driver is split into two main modules:
 
-- [`miim`](./miim/index.html) for the MII Management Interface (MIIM).
-- [`smi`](./smi/index.html) for the Serial Management Interface (SMI).
+- `miim` for the MII Management Interface (MIIM).
+- `smi` for the Serial Management Interface (SMI).
 
 While these two terms often refer to same protocol, their usage in the KSZ8863
 documentation refers to two distinct protocols and sets of registers. Please
 refer to the datasheet for details.
 
-These modules contain a type and module for every documented register along with typed access
-to each of their respective fields. High-level read/write/modify access to these registers are
-provided via the `Miim` and `Smi` types respectively.
+These modules contain a type and module for every documented register along with
+typed access to each of their respective fields. High-level read/write/modify
+access to these registers are provided via the `Miim` and `Smi` types
+respectively.
 
 *Note that the SPI and I2C interfaces are not currently supported, though PRs
 are welcome.*
 
 ## Usage
 
-At the foundation of this crate are the `miim::{Read, Write}` and `smi::{Read, Write}` traits.
-The first step is to implement these for your respective MIIM and SMI interfaces. For details
-on how to implement these, visit sections `3.3.10` and `3.3.11` of the datasheet.
+At the foundation of this crate are the `miim::{Read, Write}` and `smi::{Read,
+Write}` traits.  The first step is to implement these for your respective MIIM
+and SMI interfaces. For details on how to implement these, visit sections
+`3.3.10` and `3.3.11` of the datasheet.
 
-Implementing these traits unlocks high level access via the [`Smi`](./smi/struct.Smi.html) and
-[`Miim`](./miim/struct.Miim.html) interface type wrappers. These types provide short-hand
-methods for reading, writing and modifying registers and their individual fields. The provided
-API for these types is inspired by the `svd2rust` crate.
+Implementing these traits unlocks high level access via the `Smi` and `Miim`
+interface type wrappers. These types provide short-hand methods for reading,
+writing and modifying registers and their individual fields. The provided API
+for these types is inspired by the `svd2rust` crate.
 
 Here is an example of using the `Miim`.
 
@@ -72,14 +74,16 @@ fn main() {
 
 ### Extras
 
-The `Address` type in each module represents the unique index at which the register is located.
+The `Address` type in each module represents the unique index at which the
+register is located.
 
-The `State` type from each module is a dynamic representation of register state, useful for
-storing the state of multiple registers in a collection.
+The `State` type from each module is a dynamic representation of register state,
+useful for storing the state of multiple registers in a collection.
 
-The `Map` type from each module is a collection that is guaranteed to contain the state of all
-registers. This is useful for remotely monitoring the state of registers while reducing I/O,
-and for simulating an MIIM/SMI interface in the case that you don't have access to one.
+The `Map` type from each module is a collection that is guaranteed to contain
+the state of all registers. This is useful for remotely monitoring the state of
+registers while reducing I/O, and for simulating an MIIM/SMI interface in the
+case that you don't have access to one.
 
 ## Features
 
