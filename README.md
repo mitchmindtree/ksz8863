@@ -37,7 +37,8 @@ Here is an example of using the `Miim`.
 use ksz8863::{miim, Miim};
 
 fn main() {
-#    let miim_iface = miim::Map::default();
+    // ... Setup our device and `miim_iface`...
+
     // Wrap the type that impls the Read/Write traits with `Miim`.
     // Note: We could also wrap `&mut miim_iface` here if we only local scope access is needed.
     let mut miim = Miim(miim_iface);
@@ -64,7 +65,8 @@ The `Smi` API is similar, but we don't need to specify a PHY.
 use ksz8863::{smi, Smi};
 
 fn main() {
-#    let smi_iface = smi::Map::default();
+    // ... Setup our device and `smi_iface`...
+
     let mut smi = Smi(smi_iface);
     assert_eq!(smi.gc1().read().unwrap(), smi::Gc1::default());
     smi.gc1().modify(|w| w.tx_flow_control().clear_bit()).unwrap();
