@@ -1,6 +1,6 @@
 [package]
 name = "ksz8863"
-version = "0.1.1"
+version = "0.2.0"
 authors = ["mitchmindtree <mail@mitchellnordine.com>"]
 description = "A driver for the KSZ8863 Ethernet Switch."
 keywords = ["ethernet", "switch", "phy", "smi", "miim"]
