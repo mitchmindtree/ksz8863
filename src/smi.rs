@@ -747,23 +747,26 @@ where
     }
 }
 
-impl<'a, T> Read for &'a mut T
+impl<T> Read for T
 where
-    T: Read,
+    T: mdio::Read,
 {
     type Error = T::Error;
     fn read(&mut self, reg_addr: u8) -> Result<u8, Self::Error> {
-        (*self).read(reg_addr)
+        let data = mdio::Read::read(self, read_ctrl_bits(reg_addr))?;
+        Ok((data & 0x00FF) as u8)
     }
 }
 
-impl<'a, T> Write for &'a mut T
+impl<T> Write for T
 where
-    T: Write,
+    T: mdio::Write,
 {
     type Error = T::Error;
     fn write(&mut self, reg_addr: u8, data: u8) -> Result<(), Self::Error> {
-        (*self).write(reg_addr, data)
+        let ctrl_bits = write_ctrl_bits(reg_addr);
+        let data_bits = data as u16;
+        mdio::Write::write(self, ctrl_bits, data_bits)
     }
 }
 
@@ -782,4 +785,21 @@ impl Write for Map {
         self[addr] = State::from_addr_and_data(addr, data);
         Ok(())
     }
+}
+
+fn reg_addr_ctrl_bits(reg_addr: u8) -> u16 {
+    const REG_ADDR_OFFSET: u16 = 2;
+    (reg_addr as u16) << REG_ADDR_OFFSET
+}
+
+/// Given the register address, produce the control bits for an SMI read operation.
+pub fn read_ctrl_bits(reg_addr: u8) -> u16 {
+    const READ_CTRL_BITS: u16 = 0b0100_10_00000000_00;
+    READ_CTRL_BITS | reg_addr_ctrl_bits(reg_addr)
+}
+
+/// Given the register address, produce the control bits for an SMI write operation.
+pub fn write_ctrl_bits(reg_addr: u8) -> u16 {
+    const WRITE_CTRL_BITS: u16 = 0b0100_00_00000000_10;
+    WRITE_CTRL_BITS | reg_addr_ctrl_bits(reg_addr)
 }

@@ -299,7 +299,7 @@ macro_rules! impl_registers {
             use core::fmt;
             use super::{Address, Register, R, W};
 
-            pub type Fields = bitarr!(for $bits, in Msb0, $RegTy);
+            pub type Fields = bitarr!(for $bits, in Lsb0, $RegTy);
 
             #[derive(Clone, Copy, Eq, Hash, PartialEq)]
             #[cfg_attr(feature = "serde", derive(serde::Deserialize, serde::Serialize))]

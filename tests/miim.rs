@@ -3,7 +3,7 @@ use ksz8863::miim::{self, Miim};
 #[test]
 fn test_bcr_default() {
     let actual: u16 = miim::Bcr::default().into();
-    let expected = 0b0000_0100_0000_1000;
+    let expected = 0b0001_0000_0010_0000;
     assert_eq!(actual, expected);
 }
 
@@ -19,7 +19,7 @@ fn test_bcr_reset() {
 #[test]
 fn test_bsr_default() {
     let actual: u16 = miim::Bsr::default().into();
-    let expected = 0b0001_0000_0001_1110;
+    let expected = 0b0111_1000_0000_1000;
     assert_eq!(actual, expected);
 }
 

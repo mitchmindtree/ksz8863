@@ -6,26 +6,12 @@
 //!
 //! Each of the 8 16-bit registers are indexed via a 5-bit address, preceded by a 5-bit PHY address.
 
+use mdio::miim::{Read, Write};
+
 /// Implemented for all 16-bit MIIM registers.
 pub trait Register: Default + From<u16> + Into<u16> {
     /// The address at which the register can be located via the MIIM interface.
     const ADDRESS: Address;
-}
-
-/// A trait for reading from the KSZ8863's MIIM interface.
-pub trait Read {
-    /// Errors that might occur on the MIIM interface.
-    type Error;
-    /// Read the data from the given register address associated with the specified PHY.
-    fn read(&mut self, phy_addr: u8, reg_addr: u8) -> Result<u16, Self::Error>;
-}
-
-/// A trait for writing to the KSZ8863's MIIM interface.
-pub trait Write {
-    /// Errors that might occur on the MIIM interface.
-    type Error;
-    /// Write to the register at the given address associated with the specified PHY.
-    fn write(&mut self, phy_addr: u8, reg_addr: u8, data: u16) -> Result<(), Self::Error>;
 }
 
 /// A higher-level wrapper around an `miim::Read` and/or `miim::Write` implementation.
@@ -49,6 +35,9 @@ pub struct R<T>(T);
 
 /// A type wrapper that allows to write to the individual fields of a register.
 pub struct W<T>(T);
+
+/// The default PHY addresses of the two PHYs on the KSZ8863.
+pub const DEFAULT_PHY_ADDRS: [u8; 2] = [0x01, 0x02];
 
 impl_registers! {
     size_bits 16;
@@ -201,26 +190,6 @@ where
             .miim
             .0
             .write(self.phy.addr, R::ADDRESS.into(), reg.into())
-    }
-}
-
-impl<'a, T> Read for &'a mut T
-where
-    T: Read,
-{
-    type Error = T::Error;
-    fn read(&mut self, phy_addr: u8, reg_addr: u8) -> Result<u16, Self::Error> {
-        (*self).read(phy_addr, reg_addr)
-    }
-}
-
-impl<'a, T> Write for &'a mut T
-where
-    T: Write,
-{
-    type Error = T::Error;
-    fn write(&mut self, phy_addr: u8, reg_addr: u8, data: u16) -> Result<(), Self::Error> {
-        (*self).write(phy_addr, reg_addr, data)
     }
 }
 
