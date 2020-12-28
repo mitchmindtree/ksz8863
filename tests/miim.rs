@@ -50,14 +50,14 @@ fn miim_api() {
     assert_eq!(a, miim::Bcr::default());
 
     // Overwrite the Bcr register.
-    bcr.write(|w| w.enable_autoneg().clear_bit()).unwrap();
+    bcr.write(|w| w.an_enable().clear_bit()).unwrap();
     let b = bcr.read().unwrap();
     assert!(a != b);
 
     // Modify the Bcr register.
     bcr.modify(|w| w.force_100().set_bit()).unwrap();
     let c = bcr.read().unwrap();
-    assert!(c.read().enable_autoneg().bit_is_clear());
+    assert!(c.read().an_enable().bit_is_clear());
     assert!(c.read().force_100().bit_is_set());
 
     // Reset the Bcr register.
